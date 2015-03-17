@@ -420,6 +420,7 @@ cons_getc(void)
 		if (cons.rpos == CONSBUFSIZE)
 			cons.rpos = 0;
 		return c;
+		
 	}
 	return 0;
 }

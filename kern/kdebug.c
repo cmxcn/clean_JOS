@@ -179,8 +179,10 @@ debuginfo_eip(uintptr_t addr, struct Eipdebuginfo *info)
 	//	Look at the STABS documentation and <inc/stab.h> to find
 	//	which one.
 	// Your code here.
-
-
+	stab_binsearch(stabs, &lline, &rline, N_SLINE, addr); 
+	if (lline > rline)
+		return -1;
+	info->eip_line = stabs[lline].n_desc;
 	// Search backwards from the line number for the relevant filename
 	// stab.
 	// We can't just use the "lfile" stab because inlined functions
@@ -190,6 +192,7 @@ debuginfo_eip(uintptr_t addr, struct Eipdebuginfo *info)
 	       && stabs[lline].n_type != N_SOL
 	       && (stabs[lline].n_type != N_SO || !stabs[lline].n_value))
 		lline--;
+	
 	if (lline >= lfile && stabs[lline].n_strx < stabstr_end - stabstr)
 		info->eip_file = stabstr + stabs[lline].n_strx;
 
